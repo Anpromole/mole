@@ -1,0 +1,76 @@
+#include <cstdio>
+#include <cstring>
+const int maxn = 10010;
+int temp=0;//记录这个数的位数
+void transPrint(int a[],int n) {//将数组a的每一位数输出对应拼音
+	for (int i = n-1; i >=0; i--) {
+		switch (a[i])
+		{
+		case 0:
+			printf("ling");
+			break;
+		case 1:
+			printf("yi");
+			break;
+		case 2:
+			printf("er");
+			break;
+		case 3:
+			printf("san");
+			break;
+		case 4:
+			printf("si");
+			break;
+		case 5:
+			printf("wu");
+			break;
+		case 6:
+			printf("liu");
+			break;
+		case 7:
+			printf("qi");
+			break;
+		case 8:
+			printf("ba");
+			break;
+		case 9:
+			printf("jiu");
+			break;
+		default:
+			break;
+		}
+		if (i != 0) {
+			printf(" ");
+		}
+	}
+}
+void transCharToInt(char a[], int b[]) {//将char数组转为int数组
+	for (int i = 0; i < strlen(a); i++) {
+		b[i] = (int)(a[i] - '0');
+	}
+}
+int sum(int a[], int n) {//求int数组每位之和
+	int sum1 = 0;
+	for (int i = 0; i < n; i++) {
+		sum1 += a[i];
+	}
+	return sum1;
+}
+void transNumToArry(int a, int b[]) {//将一个数转化为一个数组
+	int n = 0;
+	while (a) {
+		b[n++] = a % 10;//数组b从前往后储存a的低位到高位
+		a = a / 10;
+		temp++;
+	}
+}
+int main() {
+	char a[maxn];
+	int  b[maxn];
+	scanf("%s", a);
+	transCharToInt(a, b);
+	int c[maxn];//储存数转数组后的数组
+	transNumToArry(sum(b, strlen(a)), c);
+	transPrint(c, temp);
+	return 0;
+}
