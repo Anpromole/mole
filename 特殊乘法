@@ -1,0 +1,30 @@
+#include <cstdio>
+#include <cstring>
+//const int maxn = 100;
+void trans(char a[], int b[]) {
+	for (int i = 0; i < strlen(a); i++) {
+		b[i] = (int) (a[i]-'0');//char转化成int
+	}
+}
+int main() {
+	char A[15], B[15];
+	int a[15], b[15];
+	while (scanf("%s %s", A, B)!=EOF) {
+		int numA = strlen(A);//记录数组A的位数，即最外层循环几轮
+		int numB = strlen(B);//内层循环几轮
+		memset(a, 0, sizeof(a));
+		memset(b, 0, sizeof(b));
+		int sum = 0;
+		trans(A, a);
+		trans(B, b);
+		//printf("%d\n", a);
+		//printf("%d\n", b);
+		for (int i = 0; i < numA; i++) {
+			for (int j = 0; j < numB; j++) {
+				sum += a[i] * b[j];
+			}
+		}
+		printf("%d\n", sum);
+	}
+
+}
