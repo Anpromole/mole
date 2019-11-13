@@ -1,0 +1,27 @@
+#include <cstdio>
+#include <cstring>
+int main() {
+	int round1;//循环次数
+	int numE=0;//偶数数目
+	int numO=0;//奇数数目
+	int n;
+	while (scanf("%d", &round1) != EOF) {
+		for (int i = 0; i < round1; i++) {
+			scanf("%d", &n);
+			if (n % 2 == 1) {
+				numO++;
+			}
+			else {
+				numE++;
+			}
+		}
+		if (numE > numO) {
+			printf("NO\n");
+		}
+		else {
+			printf("YES\n");
+		}
+	}
+	return 0;
+}
+//printf内不要忘了接\n，斜杠也不要搞错
