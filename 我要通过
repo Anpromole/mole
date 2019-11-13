@@ -1,0 +1,52 @@
+#include <cstdio>
+#include <cstring>
+const int maxn = 10010;
+int main() {
+	int rounds;
+	int leftA=0,numP=0, midA=0, numT=0,rightA=0;//分别记录P、左中右的A、T字母的数目
+	int mark=0;//用于记录是否break的信号量
+	int mark1 = 0;//用于选择输出什么语句的信号量
+	char string1[maxn];
+	scanf("%d", &rounds);
+	for (int i = 0; i < rounds; i++) {
+		scanf("%s", string1);
+		/*for (int k = 0; k < strlen(string1); k++) {
+			printf("%c", string1[k]);
+		}*/
+		for (int j= 0; j < strlen(string1); j++){
+			if (string1[j] != 'P'&& string1[j] !='A'&& string1[j] !='T') {
+				mark = 1;
+				break;
+			}
+			if (string1[j] == 'P') {
+				numP++;
+			}
+			if (string1[j] == 'A'&& numP == 0) {
+				leftA++;
+			}
+			if (string1[j] == 'A'&& numP == 1 && numT==0) {
+				midA++;
+			}
+			if (string1[j] == 'A'&& numT == 1) {
+				rightA++;
+			}
+			if (string1[j] == 'T') {
+				numT++;
+			}				
+		}
+		printf("%d %d %d", leftA, midA, rightA);
+		if (numP == 1 && leftA * midA == rightA && numT == 1 && mark==0 && midA>1) {
+			printf("YES\n");
+			mark1 = 1;
+		}
+		if (numP == 1 && midA==1 && numT == 1 && mark == 0) {
+			printf("YES\n");
+			mark1 = 1;
+		}
+		if(mark1==0){
+			printf("NO\n");
+		}
+		mark1 = mark = numP = midA = numT = leftA = rightA = 0;
+	}
+	return 0;
+}
