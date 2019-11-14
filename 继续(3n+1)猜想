@@ -1,0 +1,53 @@
+#include <cstdio>
+#include <cstring>
+const int maxn = 10010;
+int a[maxn] = { 0 };//mark用数组
+int b[maxn] = { 0 };//存数用数组
+void mark(int k[], int n) {//给不用反复验证的数打个标
+	int temp = n;
+	while (temp != 1) {
+		if (temp % 2 == 1) {
+			temp = (3 * temp + 1) / 2;
+		}
+		else {
+			temp = temp / 2;
+		}
+		k[temp] = 1;
+	}
+}
+int main() {
+
+	int num;//记录有几个数输入
+	int n = 0;//记录输出几个数
+	scanf("%d", &num);
+		for (int i = 0; i < num; i++) {
+			scanf("%d", &b[i]);
+			mark(a, b[i]);
+		}
+		for (int i = num - 1; i >= 0; i--) {
+			if (a[b[i]] == 0) {
+				n++;
+			}
+		}
+		for (int i = 1; i < num ; i++) {//对b进行从大到小排序
+			for (int j = 0; j < num - i; j++) {
+				if (b[j] < b[j + 1]) {
+					int temp = b[j];
+					b[j] = b[j + 1];
+					b[j + 1] = temp;
+				}
+			}
+		}
+		for (int i = 0; i <num; i++) {
+			if (a[b[i]] == 0) {
+				printf("%d", b[i]);
+				n--;
+				if (n != 0) {
+					printf(" ");
+				}
+				else {
+					printf("\n");
+				}
+			}
+		}
+	return 0;
