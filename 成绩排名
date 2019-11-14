@@ -1,0 +1,39 @@
+#include <cstdio>
+#include <cstring>
+const int maxn = 100010;
+struct studentInfo {
+	char name[15];
+	char ID[15];
+	int score;
+}stu[maxn];
+int getMax(studentInfo stu[],int n) {
+	int temp = 0;//记录最大值的数组下标
+	for (int i = 0; i < n; i++) {
+		if (stu[temp].score < stu[i].score) {
+			temp = i;
+		}
+	}
+	return temp;
+}
+int getMin(studentInfo stu[], int n) {
+	int temp = 0;//记录最小值的数组下标
+	for (int i = 0; i < n; i++) {
+		if (stu[temp].score > stu[i].score) {
+			temp = i;
+		}
+	}
+	return temp;
+
+}
+int main() {
+	int rounds = 0;
+	scanf("%d", &rounds);
+	for (int i = 0; i < rounds; i++) {
+		scanf("%s %s %d", stu[i].name,stu[i].ID,&stu[i].score);
+	}
+	int i=getMax(stu, rounds);
+	int j=getMin(stu, rounds);
+	printf("%s %s\n", stu[i].name, stu[i].ID);
+	printf("%s %s\n", stu[j].name, stu[j].ID);
+	return 0;
+}
