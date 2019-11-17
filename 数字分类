@@ -1,0 +1,88 @@
+#include <cstdio>
+#include <Windows.h>
+const int maxn = 1001;
+int n = 0;//记录有几个数输入
+int tempA2 = 0;//b数组下标
+int tempA4 = 0;
+int getA1(int a[]) {//能被 5 整除的数字中所有偶数的和
+	int b[maxn] = { 0 };
+	int m = 0;//记录有几个数存入b
+	for (int i = 0; i < n; i++) {
+		if (a[i] % 5 == 0 && a[i] % 2 == 0) {
+			b[m] = a[i];
+			m++;
+		}
+	}
+	int sum = 0;
+	for (int i = 0; i < m; i++) {
+		sum += b[i];
+	}
+	return sum;
+}
+int getA2(int a[]) {//将被 5 除后余 1 的数字按给出顺序进行交错求和
+	int b[maxn] = { 0 };
+	int sum = 0;
+	for (int i = 0; i < n; i++) {
+		if (a[i] % 5 == 1) {
+			b[tempA2++] = a[i];
+		}
+	}
+	for (int i = 0; i < tempA2; i++) {
+		if (i % 2 == 0) {
+			sum += b[i];
+		}
+		else {
+			sum -= b[i];
+		}
+	}
+	return sum;
+}
+int getA3(int a[]) {//被 5 除后余 2 的数字的个数
+	int temp = 0;//个数
+	for (int i = 0; i < n; i++) {
+		if (a[i] % 5 == 2)
+			temp++;
+	}
+	return temp;
+}
+double getA4(int a[]) {//被 5 除后余 3 的数字的平均数，精确到小数点后 1 位；
+	double sum = 0;
+	double average = 0;
+	for (int i = 0; i < n; i++) {
+		if (a[i] % 5 == 3) {
+			sum += a[i];
+			tempA4++;
+		}
+	}
+	average = sum / tempA4;
+	return average;
+}
+int getA5(int a[]) {
+	int max = 0;
+	for (int i = 0; i < n; i++) {
+		if (max < a[i] && a[i] % 5 == 4) {
+			max = a[i];
+		}
+	}
+	return max;
+}
+int main() {
+	int num[maxn];
+	int abc = 0;
+	scanf("%d", &abc);
+	while (scanf("%d", &num[n]) != EOF) {//输入N个正整数
+		n++;
+	}
+	int A1 = getA1(num);
+	int A2 = getA2(num);
+	int A3 = getA3(num);
+	double A4 = getA4(num);
+	int A5 = getA5(num);
+	if (A1)printf("%d ", A1);                else printf("N ");
+	if (tempA2 != 0)printf("%d ", A2);       else printf("N ");
+	if (A3)printf("%d ", A3);                else printf("N ");
+	if (tempA4 != 0)printf("%.1lf ", A4);    else printf("N ");
+	if (A5)printf("%d", A5);                 else printf("N");
+	system("pause");
+	return 0;
+}
