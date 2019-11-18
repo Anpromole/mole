@@ -1,0 +1,89 @@
+#include <cstdio>
+#include <cstring>
+int getminlen(char a[], char b[]) {
+	int min = 0;
+	int lenA = strlen(a);
+	int lenB = strlen(b);
+	if (lenA >= lenB) {
+		min = lenB;
+	}
+	else {
+		min = lenA;
+	}
+	return min;
+}
+void locateDateHour(int len, char a[], char b[],int c[]) {
+	int temp = 0;
+	for (int i = 0; i < len&& temp<2; i++) {
+		if (a[i] == b[i]) {
+			if (temp == 0) {//temp=0时判断是否是前七个大写字母，即是否表示星期几
+				if (64 < (int)a[i] && (int)a[i] < 72) {
+					c[0] = ((int)a[i]) % 64;//c中存储数字星期几
+					temp++;
+				}
+			}
+			else {//temp=1时判断是否是表示小时
+				if (47 < (int)a[i] && (int)a[i] < 58 ) {//如果a中是0到9
+					int num = ((int)a[i]) -48;
+					if (num < 10) {
+						c[1] = 0;
+						c[2] = num;
+					}
+					else {
+						c[2] = num % 10;
+						num /= 10;
+						c[1] = num;
+					}
+					temp++;
+				}
+				if (64 < (int)a[i] && (int)a[i] < 79) {//如果a中是A到N
+					int num = ((int)a[i]) - 55;
+					if (num < 10) {
+						c[1] = 0;
+						c[2] = num;
+					}
+					else {
+						c[2] = num % 10;
+						num /= 10;
+						c[1] = num;
+					}
+					temp++;
+				}
+			}
+		
+		}
+	}
+}
+void locateMinute(int len, char a[], char b[], int c[]) {
+	for (int i = 0; i < len; i++) {
+		if (a[i] == b[i]) {
+			if (64< (int)a[i] && (int)a[i] < 123) {//a[i]还应当是英文字母，大小写都行
+				if (i < 10) {
+					c[3] = 0;
+					c[4] = i;
+					break;
+				}
+				else {
+					c[4] = i % 10;
+					i /= 10;
+					c[3] = i;
+					break;
+				}
+			}
+		}
+	}
+}
+int main() {
+	char date[10][10] = { " ","MON","TUE","WED","THU","FRI","SAT","SUN" };
+	char string[4][70];
+	int store[5];
+	for (int i = 0; i < 4; i++) {
+		scanf("%s", string[i]);
+	}
+	int lenA=getminlen(string[0], string[1]);
+	locateDateHour(lenA, string[0], string[1], store);
+	int lenB = getminlen(string[2], string[3]);
+	locateMinute(lenB, string[2], string[3], store);
+	printf("%s %d%d:%d%d", date[store[0]], store[1], store[2], store[3], store[4]);
+	return 0;
+}
