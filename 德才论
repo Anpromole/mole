@@ -1,0 +1,68 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+int num, L, H;
+int temp = 0;
+struct student {
+	int ID;
+	int moralpoint;
+	int talentpoint;
+	int sum;
+	int type = 0;
+}stu[100001];
+void sortType(student stu[]) {//返回b里输入了多少个学生
+	for (int i = 0; i < temp; i++) {
+		if (stu[i].moralpoint >= H && stu[i].talentpoint >= H) {//A类
+			stu[i].type = 1;
+		}
+		if (stu[i].moralpoint >= H && stu[i].talentpoint <= H  && !stu[i].type) {
+			stu[i].type = 2;
+		}
+		if (stu[i].moralpoint <= H && stu[i].talentpoint <= H && stu[i].moralpoint>=stu[i].talentpoint && !stu[i].type) {
+			stu[i].type = 3;
+		}
+		if (!stu[i].type) {//高于L且不是以上三种类型的学生
+			stu[i].type = 4;
+		}
+	}
+}
+bool cmp(student a, student b ){
+	if (a.type == b.type) {
+		if (a.sum == b.sum) {
+			if (a.moralpoint == b.moralpoint) {
+				return a.ID < b.ID;
+			}
+			else {
+				return a.moralpoint > b.moralpoint;
+			}
+		}
+		else {
+			return a.sum > b.sum;
+		}
+	}
+	else {
+		return a.type < b.type;
+	}
+}
+void output(student a[], int b) {
+	for (int i = 0; i < b; i++) {
+		printf("%d %d %d\n", a[i].ID, a[i].moralpoint, a[i].talentpoint);
+	}
+	
+}
+int main() {
+	scanf("%d%d%d", &num, &L, &H);
+	for (int i = 0; i < num; i++) {
+		scanf("%d%d%d", &stu[temp].ID, &stu[temp].moralpoint, &stu[temp].talentpoint);
+		if (stu[temp].moralpoint < L || stu[temp].talentpoint < L) {
+			continue;
+		}
+		stu[temp].sum = stu[temp].moralpoint + stu[temp].talentpoint;
+		temp++;
+	}
+	sortType(stu);
+	sort(stu, stu + temp, cmp);
+	printf("%d\n", temp);
+	output(stu, temp);
+	return 0;
+}
