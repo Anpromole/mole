@@ -1,0 +1,58 @@
+#include <cstdio>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+struct student {
+	int score;
+	char id[15];
+	int location_Rank;
+	int location;
+}stu[30010];
+bool cmp(student a, student b) {
+	if (a.score != b.score) {
+		return a.score > b.score;
+	}
+	else {
+		return strcmp(a.id,b.id)<0;
+	}
+}
+int main() {
+	int numl;
+	scanf("%d", &numl);
+	int ans = 0;//数组下标
+	int sum = 0;
+	int numN = 1;
+	for (int i = 0; i < numl; i++) {
+		int num;
+		scanf("%d", &num);
+		for (int j = 0; j < num; j++) {
+			scanf("%s %d", &stu[ans].id, &stu[ans].score);
+			stu[ans].location = numN;
+			ans++;
+		}
+		sum += num;
+		sort(stu+sum-num, stu+sum, cmp);
+		int j = sum - num;
+		stu[j].location_Rank = 1;
+		j++;
+		for (; j < sum; j++) {
+			if (stu[j].score == stu[j - 1].score) {
+				stu[j].location_Rank = stu[j-1].location_Rank;
+			}
+			else {
+				stu[j].location_Rank = j + 1 - sum + num;
+			}
+		}
+		numN++;
+	}
+	sort(stu, stu+sum, cmp);
+	printf("%d\n", sum);
+	int r = 1;
+	for (int i = 0; i < sum; i++) {
+		if (i > 0 && stu[i].score != stu[i - 1].score) {
+			r = 1 + i;
+		}
+		printf("%s %d %d %d\n", stu[i].id, r, stu[i].location, stu[i].location_Rank);
+	}
+	return 0;
+}
