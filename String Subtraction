@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <cstring>
+#include <algorithm>
+#include <Windows.h>
+using namespace std;
+int main()
+{
+	char s1[10010], s2[10010];
+	int flag[255];
+	while (gets_s(s1)) {
+		memset(flag, 0, sizeof(flag));
+		gets_s(s2);
+		for (int i = 0; s2[i] != '\0'; i++) {
+			if (flag[s2[i]] == 0) {
+				flag[s2[i]]++;
+			}
+		}
+		for (int i = 0; s1[i] != '\0'; i++) {
+			if (flag[s1[i]] == 0) {
+				printf("%c", s1[i]);
+			}
+		}
+	}
+	system("pause");
+	return 0;
+}
