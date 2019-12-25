@@ -1,0 +1,79 @@
+#include <cstdio>
+#include <algorithm>
+#include <string.h>
+using namespace std;
+const int maxn = 10010;
+int toll[25];
+struct record {
+	char name[21];
+	int month, dd, hh, mm;
+	bool status;
+
+}rec[maxn], temp;
+bool cmp(record a, record b) {
+	int s = strcmp(a.name, b.name);
+	if (s != 0) return s < 0;
+	else if (a.month != b.month) return a.month < b.month;
+	else if (a.dd != b.dd) return a.dd < b.dd;
+	else if (a.hh != b.hh) return a.hh < b.hh;
+	else return a.mm < b.mm;
+}
+void get_ans(int on, int off, int& time, int& money) {
+	temp = rec[on];
+	while (temp.dd < rec[off].dd || temp.hh < rec[off].hh || temp.mm < rec[off].mm) {
+		time++;
+		money += toll[temp.hh];
+		temp.mm++;
+		if (temp.mm >= 60) {
+			temp.mm = 0;
+			temp.hh++;
+		}
+		if (temp.hh >= 24) {
+			temp.hh = 0;
+			temp.dd++;
+		}
+	}
+}
+int main()
+{
+	for (int i = 0; i < 24; i++) {
+		scanf("%d", &toll[i]);
+	}
+	int num;
+	scanf("%d", &num);
+	for (int i = 0; i < num; i++) {
+		scanf("%s", rec[i].name);
+		scanf("%d:%d:%d:%d", &rec[i].month, &rec[i].dd, &rec[i].hh, &rec[i].mm);
+		char line[10];
+		scanf("%s", line);
+		if (strcmp(line, "on-line") == 0)  rec[i].status = 1;
+		else rec[i].status = 0;
+
+	}
+	sort(rec, rec + num, cmp);
+	double total = 0;
+	bool flag = 0;
+	for (int on = 0; on < num; on++) {
+		if (strcmp(rec[on].name, rec[on+1].name) == 0) {
+			if (rec[on].status == 1 && rec[on + 1].status == 0) {
+				if (!flag) {
+					printf("%s %02d\n", rec[on].name, rec[on].month);
+					flag = 1;
+				}
+				printf("%02d:%02d:%02d ", rec[on].dd, rec[on].hh, rec[on].mm);
+				printf("%02d:%02d:%02d ", rec[on + 1].dd, rec[on + 1].hh, rec[on + 1].mm);
+				int time = 0, money = 0;
+				get_ans(on, on + 1, time, money);
+				total += money;
+				printf("%d $%.2f\n", time, money / 100.0);
+			}
+		}
+		else  {
+            if (flag)
+			printf("Total amount: $%.2f\n", total / 100.0);
+			total = 0;
+			flag = 0;
+		}
+	}
+	return 0;
+}
