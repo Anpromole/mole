@@ -1,0 +1,43 @@
+#include <cstdio>
+#include <algorithm>
+#include <string.h>
+#include <Windows.h>
+using namespace std;
+const int maxn = 10010;
+int model;
+struct student {
+	int id;
+	char name[10];
+	int score;
+}stu[10^5];
+bool cmp(student a, student b) {
+	if (model == 1)
+		return a.id < b.id;
+	else if (model == 2) {
+		if (strcmp(a.name, b.name) == 0)
+			return a.id < b.id;
+		else
+			return strcmp(a.name, b.name) < 0;
+	}
+	else if (model == 3) {
+		if (a.score == b.score)
+			return a.id < b.id;
+		else
+			return a.score < b.score;
+	}
+		
+}
+int main()
+{
+	int num;
+	scanf("%d%d", &num, &model);
+	for (int i = 0; i < num; i++) {
+		scanf("%d%s%d", &stu[i].id, stu[i].name, &stu[i].score);
+	}
+	sort(stu, stu + num,cmp);
+	for (int i = 0; i < num; i++) {
+		printf("%06d %s %d\n", stu[i].id, stu[i].name, stu[i].score);
+	}
+	system("pause");
+	return 0;
+}
