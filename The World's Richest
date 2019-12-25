@@ -1,0 +1,52 @@
+#include <cstdio>
+#include <algorithm>
+#include <string.h>
+#include <Windows.h>
+using namespace std;
+const int maxn = 10010;
+struct person {
+	char name[10];
+	int age;
+	int worth;
+} per[maxn];
+bool cmp(person a, person b) {
+	if(a.worth!=b.worth)
+		return a.worth > b.worth;
+	else {
+		if (a.age != b.age)
+			return a.age < b.age;
+		else
+			return strcmp(a.name, b.name) < 0;
+	}
+}
+int main()
+{
+	int num1,num2;
+	scanf("%d%d", &num1, &num2);
+	for (int i = 0; i < num1; i++) {
+		scanf("%s%d%d", per[i].name, &per[i].age, &per[i].worth);
+	}
+	int model[1010][3] = { 0 };//0到2，输出几个，最低几岁，最高几岁
+	for (int i = 0; i < num2; i++) {
+		scanf("%d%d%d", &model[i][0], &model[i][1], &model[i][2]);
+	}
+	sort(per, per + num1,cmp);
+	for (int i = 0; i < num2; i++) {
+		int temp = 1;
+		bool flag = 0;
+		printf("Case #%d:\n", i+1);
+		for (int j = 0; j < num1; j++) {
+			if (per[j].age >= model[i][1] && per[j].age <= model[i][2]) {
+				if (temp++ > model[i][0])
+					break;
+				printf("%s %d %d\n", per[j].name, per[j].age, per[j].worth);
+				flag = 1;
+			
+			}
+		}
+		if (!flag)
+			printf("None\n");
+	}
+	system("pause");
+	return 0;
+}
