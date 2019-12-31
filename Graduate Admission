@@ -1,0 +1,82 @@
+#include <cstdio>
+#include <algorithm>
+#include <string.h>
+#include <Windows.h>
+using namespace std;
+int const maxn = 40010;
+int quota[110];
+int a[110][maxn];//依次储存入学学生编号
+struct student {
+	int id;
+	int school[5];
+	int ge;
+	int total;
+}stu[maxn];
+int cmp(student a, student b) {
+	if (a.total != b.total) return a.total > b.total;
+	else return a.ge > b.ge;
+}
+int cmpid(int a, int b) {
+	return stu [a].id < stu [b].id;
+}
+int main()
+{
+	for (int i = 0; i < 110; i++) {
+		memset(a[i], -1, sizeof(a[i]));
+	}
+	int n, k, m;
+	scanf("%d%d%d", &n, &m, &k);
+	for (int i = 0; i < m; i++) {
+		scanf("%d", &quota[i]);
+	}
+	for (int i = 0; i < n; i++) {
+		int gi;
+		scanf("%d%d", &stu[i].ge, &gi);
+		stu[i].total = stu[i].ge + gi;
+		stu[i].id = i;
+		for (int j = 0; j < k; j++) {
+			scanf("%d", &stu[i].school[j]);
+		}
+	}
+	sort(stu, stu + n, cmp);
+	int b[110] = { 0 };//记录目前各学校录取多少人
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < k; j++) {
+			int s_id = stu[i].school[j];
+			if (b[s_id] < quota[s_id]) {
+				a[s_id][b[s_id]] = i;//排序后该学生现在在stu中的下标
+				b[s_id]++;
+				break;
+			}
+			else if (b[s_id] != 0) {
+				int prestu_id = a[s_id][b[s_id] - 1];//最后一个人的在stu中的下标
+				if (stu[prestu_id].total == stu[i].total && stu[prestu_id].ge == stu[i].ge) {
+					a[s_id][b[s_id]] = i;
+					b[s_id]++;
+					break;
+				}
+			}
+		}
+
+	}
+
+	for (int i = 0; i < m; i++) {
+		sort(a[i], a[i] + b[i],cmpid);
+	}
+	for (int i = 0; i < m; i++) {
+		if (a[i][0] != -1) {
+			printf("%d", stu[a[i][0]].id);
+			int j = 1;
+			while (a[i][j] != -1) {
+				printf(" %d", stu[a[i][j]].id);
+				j++;
+			}
+			printf("\n");
+		}
+		else {
+			printf("\n");
+		}
+	}
+	system("pause");
+	return 0;
+}
