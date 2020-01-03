@@ -1,0 +1,74 @@
+#include <cstdio>
+#include <algorithm>
+#include <string.h>
+#include <Windows.h>
+#include <map>
+using namespace std;
+int const maxn = 10010;
+map <string, int> parktime;
+struct record {
+	char id[8];
+    int time;
+	char status[4];
+}all[maxn],vaild[maxn];
+int timeToInt(int hh, int mm, int ss) {
+	return hh * 3600 + mm * 60 + ss;
+}
+bool cmp1(record a, record b) {
+	int s = strcmp(a.id, b.id);
+	if(s!=0) return s < 0;
+	else return a.time<b.time;
+}
+bool cmp2(record a, record b) {
+	return a.time < b.time;
+}
+int main()
+{
+	int r_num, q_num;
+	int hh, mm, ss;
+	scanf("%d%d", &r_num, &q_num);
+	for (int i = 0; i < r_num; i++) {
+		scanf("%s %d:%d:%d %s", all[i].id, &hh, &mm, &ss, all[i].status);
+		all[i].time = timeToInt(hh, mm, ss);
+	}
+	sort(all, all + r_num, cmp1);
+	int temp = 0;//vaild的下标,也是有效记录的条数
+	int maxTime = -1;
+	for (int i = 0; i < r_num-1; i++) {
+		if (!strcmp(all[i].id, all[i + 1].id) && !strcmp(all[i].status,"in") && !strcmp(all[i + 1].status,"out")) {
+			vaild[temp++] = all[i];
+			vaild[temp++] = all[i + 1];
+			int inTime = all[i + 1].time - all[i].time;
+			if (parktime.count(all[i].id) == 0) {
+				parktime[all[i].id] = 0;
+			}
+			parktime[all[i].id] += inTime;
+			maxTime = max(maxTime, parktime[all[i].id]);
+		}
+	}
+	sort(vaild, vaild + temp,cmp2);
+	int carNum = 0;
+	int now = 0;
+	for (int i = 0; i < q_num; i++) {
+		scanf("%d:%d:%d", &hh, &mm, &ss);
+		int query = timeToInt(hh, mm, ss);
+		while (now < temp && vaild[now].time <= query) {
+			if (!strcmp(vaild[now].status,"in" )) {
+				carNum++;
+			}
+			else {
+				carNum--;
+			}
+			now++;
+		}
+		printf("%d\n", carNum);
+	}
+	map <string, int>::iterator it;
+	for (it = parktime.begin(); it != parktime.end(); it++) {
+		if (it->second == maxTime)
+			printf("%s ", it->first.c_str());
+	}
+	printf("%02d:%02d:%02d", maxTime / 3600, maxTime % 3600 / 60, maxTime % 60);
+	system("pause");
+	return 0;
+}
