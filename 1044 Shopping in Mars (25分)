@@ -1,0 +1,48 @@
+#include <cstdio>
+const int maxn = 100010;
+int Sum[maxn];
+int inf = (1 << 31) - 1;
+struct nod {
+	int low, high, ans = 0;
+}node[maxn];
+void init(int a, int b, int c) {
+	node[a].low = a;
+	node[a].high = b;
+	node[a].ans = c;
+}
+int binarySearch(int left, int right, int aim) {//1算法笔记上返回第一个大于aim，但是我觉得可以大于等于
+	                                           //2不能用第一种二分，在不确定是否存在目标的情况下夹出来的位置有可能是小于目标的，假如例子中只有这一个加出来的位置，那min的值就会小于v出错
+	while (left < right) {
+		int mid = (left + right) / 2;
+		if (Sum[mid] >= aim) {
+			right = mid;
+		}
+		else {
+			left = mid + 1;
+		}
+	}
+	return left;
+}
+int main() {
+	int n, v;
+	int min = inf;
+	int numN = 0;
+	scanf("%d%d", &n, &v);
+	Sum[0] = 0;
+	for (int i = 1; i <= n; i++) {
+		scanf("%d", &Sum[i]);
+		Sum[i] += Sum[i - 1];
+	}
+	for (int i = 1; i <= n; i++) {
+		int j = binarySearch(i, n, v + Sum[i - 1]);
+		int temp = Sum[j] - Sum[i - 1];
+		init(i, j, temp);
+		if (min > node[i].ans && node[i].ans >= v)
+			min = node[i].ans;
+	}
+	for (int i = 1; i <= n; i++) {
+		if (node[i].ans == min)
+			printf("%d-%d\n", node[i].low, node[i].high);
+	}
+	return 0;
+}
