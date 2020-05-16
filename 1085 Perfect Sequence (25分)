@@ -1,0 +1,37 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+const int maxn = 100010;
+int num[maxn];
+int n ,p;
+int search(int arry[], int left, int right, long long x) {//min是最小数的下标，夹出来的mid是第一个大于x的数，不应当包含在队列里，所以总数是mid-1-min+1，而当arry[n-1]<=x时，n-1是包含在队列里的最后一个数，所以是n-1-min+1
+	int mid;
+	int min = left;
+	if (arry[n - 1] <= x)
+		return n - min;//这个地方当时没想明白
+	while (right > left) {
+		mid = (left + right) / 2;
+		if (arry[mid] > x) {
+			right = mid;
+		}
+		else {
+			left = mid + 1;
+		}
+	}
+	return left - min;
+}
+int main() {
+	int max = 1;
+	scanf("%d%d", &n, &p);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &num[i]);
+	}
+	sort(num, num + n);
+	for (int i = 0; i < n; i++) {
+		int temp;
+		temp = search(num, i, n - 1, (long long)num[i] * p);
+		if (max < temp)
+			max = temp;
+	}
+	printf("%d", max);
+}
