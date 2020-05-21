@@ -1,0 +1,75 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+const int maxn = 111;
+int origin[maxn],tempori[maxn],aim[maxn];
+int n;
+bool isSame(int a[], int b[]) {
+	for (int i = 0; i < n; i++) {
+		if (a[i] != b[i])
+			return false;
+	}
+	return true;
+}
+void output(int a[]) {
+	for (int i = 0; i < n; i++) {
+		printf("%d", a[i]);
+        if(i<n-1)
+            printf(" ");
+	}
+}
+bool insertSort() {
+	bool flag = false;
+	for (int i = 1; i < n; i++) {//插入排序是从1下标开始，不是从0下标开始，会出错
+		if (i != 1 && isSame(tempori, aim)) {
+			flag = true;
+		}
+		int temp = tempori[i], j = i;
+		while (j >0 && tempori[j-1]>temp) {
+			tempori[j] = tempori[j - 1];
+			j--;
+		}
+		tempori[j] = temp;
+		if (flag == true) {
+			return true;
+		}
+	}
+	return false;
+}
+void mergeSort() {
+	bool flag = false;
+	for (int step = 2; step / 2 < n; step *= 2) {
+		if (step != 2 && isSame(tempori, aim))
+			flag = true;
+		for (int i = 0; i < n; i += step) {
+			sort(tempori + i, tempori + min(i + step, n));
+		}
+		if (flag) {
+			output(tempori);
+			return;
+		}
+	}
+}
+int main() {
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &origin[i]);
+		tempori[i] = origin[i];
+	}
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &aim[i]);
+	}
+	bool flag = insertSort();
+	if (flag) {
+		printf("Insertion Sort\n");
+		output(tempori);
+	}
+	else {
+		printf("Merge Sort\n");
+		for (int i = 0; i < n; i++) {
+			tempori[i] = origin[i];
+		}
+		mergeSort();
+	}
+	return 0;
+}
