@@ -1,0 +1,33 @@
+#include <cstdio>
+#include <string.h>
+#include <iostream>
+using namespace std;
+const int MOD = 1000000007;
+const int maxn = 100010;
+char arry[maxn];
+int leftP[maxn] = { 0 };
+int rightT[maxn] = { 0 };
+int main() {
+	cin.getline(arry,maxn);
+	int len = strlen(arry);
+	leftP[0] = 0;
+	for (int i = 0; i < len; i++) {
+		if (arry[i] == 'P')
+			leftP[i+1] = leftP[i] + 1;
+		else
+			leftP[i+1] = leftP[i];
+	}
+	int ans = 0;
+	rightT[len - 1] = 0;
+	for (int i = len - 1; i > 0; i--) {
+		if (arry[i] == 'T')
+			rightT[i - 1] = rightT[i] + 1;
+		else
+			rightT[i - 1] = rightT[i];
+		if (arry[i] == 'A')
+			ans = (ans + leftP[i] * rightT[i]) % MOD;//取模的时候要把ans也加进去
+	}
+	printf("%d", ans);
+	return 0;
+
+}
