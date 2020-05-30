@@ -1,0 +1,37 @@
+#include <cstdio>
+const int maxn = 110;
+int arry[maxn];
+int gcd(int a, int b) {
+	if (b == 0) return a;
+	else return gcd(b, a % b);
+}
+int main() {
+	int n, m,temp,pos,next;//pos是当前处理位置，next是下一个处理位置，每轮循环轮到把初始位置的数放入应该放的位置时就可以进行下一次循环
+	scanf("%d%d", &n, &m);//“%d %d”中间有空格会出错，不知道为什么
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &arry[i]);
+	}
+	m = m % n;
+	if (m != 0) {
+		int temp = arry[n - m];
+		int d = gcd(n, m);
+		for (int i = n - m; i < n - m + d; i++) {
+			temp = arry[i];
+			pos = i;
+			do {
+				next = (pos - m + n) % n;
+				if (next != i)
+					arry[pos] = arry[next];
+				else
+					arry[pos] = temp;
+				pos = next;
+			} while (pos != i);
+		}
+	}
+	for (int i = 0; i < n; i++) {
+		printf("%d", arry[i]);
+		if (i < n - 1)
+			printf(" ");
+	}
+	return 0;
+}
