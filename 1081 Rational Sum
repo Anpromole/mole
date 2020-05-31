@@ -1,0 +1,50 @@
+#include <cstdio>
+#include <algorithm>
+typedef long long LL;
+struct Fraction {
+	LL up;
+	LL down;
+}arry[110];
+LL gcd(LL a, LL b) {
+	if (b == 0) return a;
+	else return gcd(b, a % b);
+}
+Fraction reduction(Fraction a) {
+	if (a.down < 0) {
+		a.down = -a.down;//不能用a.down*=-1,因为-1是短整型，结果也是短整型（应该）
+		a.up = -a.up;
+	}
+	if (a.up == 0) {
+		a.down = 1;
+	}
+	else {
+		int d = gcd(abs(a.up), abs(a.down));
+		a.up /= d;
+		a.down /= d;
+	}
+	return a;
+}
+Fraction add(Fraction a, Fraction b) {
+	Fraction c;
+	c.up = a.up * b.down + b.up * a.down;
+	c.down = a.down * b.down;
+	return reduction(c);
+}
+void output(Fraction a) {
+	if (a.down == 1) printf("%lld", a.up);//整数
+	else if (abs(a.up) > a.down) printf("%lld %lld/%lld", a.up / a.down, abs(a.up) % a.down, a.down);//假分数
+	else printf("%lld/%lld", a.up, a.down);//真分数
+}
+int main() {
+	int n;
+	scanf("%d", &n);
+	Fraction ans;
+	ans.up = 0, ans.down = 1;
+	for (int i = 0; i < n; i++) {
+		scanf("%lld/%lld", &arry[i].up, &arry[i].down);//lld不要搞错了，用d会出错
+		reduction(arry[i]);
+	    ans = add(ans, arry[i]);
+	}
+	output(ans);
+	return 0;
+}
