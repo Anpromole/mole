@@ -1,0 +1,88 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;//PAT的编译器似乎是用了算术头文件就要加上using namespace std的设定
+typedef long long LL;
+struct Fraction {
+	LL up;
+	LL down;
+}a,b;
+LL gcd(LL a, LL b) {
+	return b == 0 ? a : gcd(b, a % b);
+}
+Fraction reduction(Fraction a) {
+	if (a.down < 0) {
+		a.up = -a.up;
+		a.down = -a.down;
+	}
+     if (a.up == 0) {
+		a.down = 1;//如果遇到if语句不执行，考虑一下是不是把==写成=或者反过来
+	}
+	else {
+		LL d = gcd(abs(a.up), abs(a.down));
+		a.up /= d;
+		a.down /= d;
+	}
+	return a;
+}
+void simplest(Fraction a) {//负责输出一个化简过的数的最简型，包括判断是否输出括号
+	if (a.up < 0)
+		printf("(");
+	if (a.down == 1) printf("%lld", a.up);//整型
+	else if (abs(a.up) > a.down) printf("%lld %lld/%lld", a.up / a.down, abs(a.up) % a.down, a.down);//假分数
+	else printf("%lld/%lld", a.up, a.down);
+	if (a.up < 0)
+		printf(")");
+}
+
+void output(Fraction a,Fraction b,Fraction c ,char d) {
+	simplest(a);
+	printf(" %c ",d);
+	simplest(b);
+	printf(" = ");
+	if (d == '/' && b.up == 0) {//如果除数为0
+		printf("Inf");
+	}
+	else {
+		simplest(c);
+		printf("\n");
+	}
+}
+void add(Fraction a, Fraction b) {
+	Fraction c;
+	c.up = a.up * b.down + a.down * b.up;
+	c.down = a.down * b.down;
+	c = reduction(c);
+	output(a, b, c, '+');
+}
+void difference(Fraction a, Fraction b) {
+	Fraction c;
+	c.up = a.up * b.down - a.down * b.up;
+	c.down = a.down * b.down;
+	c = reduction(c);
+	output(a, b, c ,'-' );
+}
+void product(Fraction a, Fraction b) {
+	Fraction c;
+	c.up = a.up * b.up;
+	c.down = a.down * b.down;
+	c = reduction(c);
+	output(a, b, c, '*');
+}
+void quotient(Fraction a, Fraction b) {
+	Fraction c;
+	c.up = a.up * b.down;
+	c.down = a.down * b.up;
+	c = reduction(c);
+	output(a, b, c,'/');
+	
+}
+int main() {
+	scanf("%lld/%lld %lld/%lld", &a.up, &a.down, &b.up, &b.down);
+	a=reduction(a);
+	b=reduction(b);
+	add(a, b);
+	difference(a, b);
+	product(a, b);
+	quotient(a, b);
+	return 0;
+}
