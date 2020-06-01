@@ -1,0 +1,62 @@
+#include <cstdio>
+#include <cmath>
+const int maxn = 100010;
+struct factor {
+	int x, cnt;
+}fac[10];
+int prime[maxn], numP = 0, numF = 0, n;
+bool d[maxn] = { 0 };
+void Find_Prime(int a) {//初始化素数表,flase为素数
+	d[0] = true;
+	d[1] = true;
+	int sqr = (int)sqrt(1.0 * a);
+	for (int i = 2; i <= sqr; i++) {
+		if (!d[i]) {
+			for (int j = i + i; j <= sqr; j += i) {
+				d[j] = true;
+			}
+			prime[numP++] = i;
+		}
+	}
+}
+void Find_Factor(int a) {
+		int sqr = (int)sqrt(1.0 * a);
+		for (int i = 0; prime[i]<sqr && i < numP; i++) {//注意是列举小于sqr的质数，这里逻辑要理清
+			if (a % prime[i] == 0) {
+				fac[numF].x = prime[i];
+				fac[numF].cnt = 1;
+				a /= prime[i];
+				while (a % prime[i] == 0) {
+					fac[numF].cnt++;
+					a /= prime[i];
+				}
+				numF++;
+			}
+		}
+		if (a != 1) {
+			fac[numF].x = a;
+			fac[numF].cnt = 1;
+			numF++;
+		}
+}
+void output() {
+	printf("%d=", n);
+	if (numF == 0) {//因为1只能被自己整除却不是素数，所以在Find_Prime中是不会考虑1的，所以要特判
+		printf("1");
+	}
+	else {
+		for (int i = 0; i < numF; i++) {
+			printf("%d", fac[i].x);
+			if (fac[i].cnt > 1)
+				printf("^%d", fac[i].cnt);
+			if (i < numF - 1) printf("*");
+		}
+	}
+
+}
+int main() {
+	scanf("%d", &n);
+	Find_Prime(n);
+	Find_Factor(n);
+	output();
+}
