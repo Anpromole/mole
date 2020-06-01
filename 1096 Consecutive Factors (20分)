@@ -1,0 +1,40 @@
+#include <cstdio>
+#include <cmath>
+using namespace std;
+int main() {
+	int n, ansI = 0, ansLen = 0, first = -1;//first用于记录从小到大第一个能整除n的数，在anslen=1的时候能用到
+	scanf("%d", &n);
+	int sqr = (int)sqrt(1.0 * n);
+	for (int i = 2; i <= sqr; i++) {
+		int temp, tempI, tempLen = 0,tempN = n;
+		if (tempN % i == 0) {
+			if (first == -1) {
+				first = i;
+			}
+			temp = tempI = i;
+			tempLen++;
+			temp++;
+			tempN /= i;
+			while (tempN % temp == 0) {
+				tempN /= temp;
+				tempLen++;
+				temp++;
+			}
+			if (tempLen > ansLen) {
+				ansI = tempI;
+				ansLen = tempLen;
+			}
+		}
+	}
+	if (ansLen == 1) ansI = first;
+	if (ansLen == 0) {
+		ansI = n;
+		ansLen = 1;
+	}
+	printf("%d\n", ansLen);
+	for (int i = 0; i < ansLen; i++) {//当进行一定个数的循环时还是按个数算比较好，按大小算逻辑容易出问题
+		printf("%d", ansI+i);
+		if (i < ansLen - 1) printf("*");
+	}
+	return 0;
+}
