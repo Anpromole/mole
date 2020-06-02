@@ -1,0 +1,65 @@
+#include <cstdio>
+#include <cstring>
+typedef long long ll;//其实不需要长整型
+struct bign {
+	ll d[1000];
+	ll len;
+	bign() {
+		memset(d, 0, sizeof(d));
+		len = 0;
+	}
+};
+bign change(char str[]) {
+	bign a;
+	a.len = strlen(str);
+	for (int i = a.len - 1; i >= 0; i--) {
+		a.d[i] = str[a.len - i - 1] - '0';
+	}
+	return a;
+}
+bign reversAdd(bign a) {
+	bign b,c;
+	b.len = a.len;
+	for (int i = 0; i < b.len; i++) {
+		b.d[i] = a.d[a.len - 1 - i];
+	}
+	ll carry = 0;
+	for (int i = 0; i < a.len || i< b.len; i++) {
+		ll temp = a.d[i] + b.d[i]+carry;
+		c.d[c.len++] = temp % 10;
+		carry = temp / 10;
+	}
+	if (carry != 0) {
+		c.d[c.len++] = carry;
+	}
+	return c;
+}
+bool judge(bign a) {
+	int i = 0, j = a.len - 1;
+	while (i < j) {
+		if (a.d[i++] != a.d[j--]) return false;
+	}
+	return true;
+}
+int main() {
+	char str[20];
+	int k,num=0;
+	scanf("%s%d", str, &k);//可能要加空格
+	bign a = change(str);
+	if (!judge(a) && k != 0) {
+		while (num < k) {//不要在判断条件理num++。这样不管判断条件通不通过，都会++
+			a = reversAdd(a);
+			num++;//也不要写在break下面
+			if (judge(a)) break;
+		}
+	}
+	/*while (num < k && judge(a) == false) {
+		a = reversAdd(a);
+		num++;
+	}*/
+	for (int i = a.len-1; i >=0; i--) {
+		printf("%d", a.d[i]);
+	}
+	printf("\n%d", num);
+	return 0;
+}
