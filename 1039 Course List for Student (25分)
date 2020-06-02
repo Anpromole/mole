@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+int hashFunc(char a[], int len) {//使用using namespace std后有些名字是不能使用的比如hash
+	int temp = 0;
+	for (int i = 0; i < len-1; i++) {
+		temp = (a[i] - 'A') + temp * 26;
+	}
+	temp = temp * 10 + (a[len - 1]-'0');//字符型的数字都要减去字符‘0’才是对应的数字
+	return temp;
+}
+const int M = 26 * 26 * 26 * 10 + 1;
+vector <int> selectCourse[M];
+int main() {
+	int n, k;//n是学生数目，k是课的数目
+	scanf("%d%d", &n, &k);
+	for (int i = 0; i < k; i++) {
+		int index_c, stu_n;
+		char str[5];
+		scanf("%d%d", &index_c, &stu_n);
+		for (int i = 0; i < stu_n; i++) {
+			scanf("%s", str);
+			int id = hashFunc(str, 4);
+			selectCourse[id].push_back(index_c);
+		}
+	}
+	for (int i = 0; i < n; i++) {
+		char name[5];
+		scanf("%s", name);
+		int id = hashFunc(name, 4);
+		printf("%s %d", name, selectCourse[id].size());
+		vector<int>::iterator it;
+		sort(selectCourse[id].begin(),selectCourse[id].end());
+		for (it = selectCourse[id].begin(); it != selectCourse[id].end(); it++) {
+			printf(" %d", *it);
+		}
+		printf("\n");
+	}
+	return 0;
+}
