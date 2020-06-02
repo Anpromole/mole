@@ -1,0 +1,73 @@
+#include <cstdio>
+#include <cstring>
+int hash[11] = { 0 };
+struct bign {//高位存高位
+	int d[21];
+	int len;
+	bign() {
+		memset(d, 0, sizeof(d));
+		len = 0;
+	}
+};
+bign change(char a []) {
+	bign c;
+	c.len = strlen(a);
+	for (int i = 0; i <c.len; i++) {
+		c.d[i] = a[c.len - i - 1] - '0';
+		hash[c.d[i]]++;
+	}
+	return c;
+}
+bign mul(bign a,int b) {
+	int carry = 0;
+	bign c;
+	for (int i = 0; i < a.len; i++) {
+		int temp = b * a.d[i] + carry;
+		c.d[c.len++] = temp % 10;
+		carry = temp / 10;
+	}
+	while (carry != 0) {//最高为算过后进位不为0时
+		c.d[c.len++] = carry % 10;
+		carry /= 10;
+	}
+	return c;
+}
+bool judge(bign a, bign b) {
+	if (a.len != b.len) return false;
+	int count[10] = { 0 };
+	for (int i = 0; i < a.len; i++) {
+		count[a.d[i]]++;
+		count[b.d[i]]--;
+	}
+	for (int i = 0; i < 10; i++) {
+		if (count[i] != 0)return false;
+	}
+	return true;
+}
+int main() {
+	char str[21];
+	scanf("%s", str);
+	bign c = change(str);
+	bign a = mul(c, 2);
+	bool flag = true;
+	if (a.len != c.len) {
+		flag = false;
+	}
+	else {
+		for (int i = 0; i < a.len; i++) {
+			hash[a.d[i]]--;
+		}
+		for (int i = 0; i < 10; i++) {//z这一步一定要加上，要确保hash表上的值都为初始状态0
+			if (hash[i] != 0)
+				flag = false;
+		}
+	}
+	if (flag) printf("Yes\n");
+	else printf("No\n");
+	/*if (judge(a, c)) printf("Yes\n");
+	else printf("No\n");*/
+	for (int i = a.len - 1; i >= 0; i--) {
+		printf("%d", a.d[i]);
+	}
+
+}
