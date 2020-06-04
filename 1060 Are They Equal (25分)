@@ -1,0 +1,60 @@
+#include <string>
+#include <cstdio>
+#include <iostream>
+#include <cstring>
+using namespace std;
+int n;//有效位数
+string deal(string a, int& e) {//处理初始字符串，返回科学计数法小数点后的部分
+	int k = 0;//在如果是整数部分使用
+	while (a.size() > 0 && a[0] == '0') {//这里size一定要写成>0，因为不检查最后一位就不知道这个数整数位是不是0，即使这样有可能size=0，只要在后面特判就好
+		a.erase(a.begin());//erase(地址)不是a[0]
+	}
+	if (a[0] == '.') {//如果是小数,去除小数部分前导0并使阶乘--
+		a.erase(a.begin());
+		while (a.size() > 0 && a[0] == '0') {
+			a.erase(a.begin());
+			e--;
+		}
+	}
+	else {//如果整数不为0，则找到小数点删除并使阶乘++
+		while (a[k] != '.' && k < a.size()) {//如果没有小数点且整数全为0是不会经过这步的
+			e++;
+			k++;
+		}
+		if (k < a.size()) {//这是在如果是整数不为0的情况才能用
+			a.erase(a.begin() + k);
+		}
+	}
+	if (a.size() == 0) {//在去除前导0得长度为0即这个数小数点前后都为0，就算是0也要根据题目要求输出的位数变换格式，所以不能在这里就return a=‘0’,
+		e = 0;
+	}
+	string b;//经过上面的步骤以后已经把a规格化为没有小数点也没有前导0的数
+	k = 0;
+	for (int i = 0; i < n; i++) {
+		if (i < a.size()) b = b + a[i];
+		else b = b + '0';
+	}
+	return b;
+}
+void output(string a,int e) {
+	printf("0.%s*10^%d", a.c_str(), e);
+}
+int main() {
+	scanf("%d", &n);
+	string num1, num2;
+	int e1 = 0, e2 = 0;
+	cin >> num1 >> num2;
+	num1 = deal(num1, e1);
+	num2 = deal(num2, e2);
+	if (num1 == num2 && e1 == e2) {
+		printf("YES ");
+		output(num1, e1);
+	}
+	else {
+		printf("NO ");
+		output(num1, e1);
+		printf(" ");
+		output(num2, e2);
+	}
+	return 0;
+}
