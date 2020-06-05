@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <string>
+#include <iostream>
+#include <map>;
+using namespace std;
+map <string,int> stringTonum;
+string numTostring[170];//由于不包括169，所以最大得火星文就是 jou dec 13*12+12,130应当是lok而不是lok tert
+string unitDigit[13] = { "tret","jan", "feb", "mar", "apr", "may", "jun", "jly", "aug", "sep", "oct", "nov", "dec" };
+string tenDigit[13] = { "tret","tam", "hel", "maa", "huh", "tou", "kes", "hei", "elo", "syy", "lok", "mer", "jou" };//在13倍数项中加入tert的目的是使for循环可以放在一起，不然一个12，13就要写两个for循环
+void init() {
+	for (int i = 0; i < 13; i++) {//打表了个位数和13的倍数的情况
+		numTostring[i] = unitDigit[i];
+		numTostring[i * 13] = tenDigit[i];//当i=0时numTostring[0]=tenDigit[0]="tert",这证明了其实tendigit里也可以没有tert
+		stringTonum[unitDigit[i]] = i;
+		stringTonum[tenDigit[i]] = 13 * i;
+	}
+	for (int i = 1; i < 13; i++) {//十位
+		for (int j = 1; j < 13; j++) {//个位
+			numTostring[13 * i + j] = tenDigit[i] + " " + unitDigit[j];
+			stringTonum[tenDigit[i] + " " + unitDigit[j]] = 13 * i + j;
+		}
+	}
+}
+int main() {
+	init();
+	int n;
+	scanf("%d%*c", &n);//%*c表示忽略掉一个字符型的输入项
+    while(n--){
+		string str;
+		getline(cin, str);//不能用cin，cin读到空格就中止了
+		if (str[0] >= '0' && str[0] <= '9') {
+			int num = 0, len = str.size();
+			for (int j = 0; j < len; j++) {
+				num = num * 10 + (str[j]-'0');
+			}
+			cout << numTostring[num] << endl;
+		}
+		else {
+			printf("%d\n",stringTonum[str]);
+		}
+	}
+}
