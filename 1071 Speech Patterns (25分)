@@ -1,0 +1,48 @@
+#include <cstdio>
+#include <string>
+#include <iostream>
+#include <map>
+using namespace std;
+map<string, int> num_w;
+bool check(char c) {
+	if (c >= '0' && c <= '9')return true;
+	if (c >= 'A' && c <= 'Z')return true;
+	if (c >= 'a' && c <= 'z')return true;
+	return false;
+}
+int main() {
+	string str;
+	getline(cin, str);
+	int i = 0, len = str.length();//strlen是char用的
+	while (i < len) {
+		string ward;
+		while (check(str[i]) && i < len) {
+			if (str[i] >= 'A' && str[i] <= 'Z') {
+				str[i] += 32;
+			}
+			ward += str[i];
+			i++;
+		}
+		if (ward != "") {
+			if (num_w.find(ward) != num_w.end()) {
+				num_w[ward]++;
+			}
+			else {
+				num_w[ward] = 1;
+			}
+		}
+		while (i < len && check(str[i]) == false) {
+			i++;
+		}
+	}
+	string ans;
+	int max = 0;
+	for (map<string, int>::iterator it = num_w.begin(); it != num_w.end(); it++) {
+		if (it->second > max) {
+			ans = it->first;
+			max = it->second;
+		}
+	}
+	cout << ans << " " << max << endl;
+	return 0;
+}
