@@ -1,0 +1,54 @@
+#include <cstdio>
+#include <map>
+#include <set>
+#include <string>
+#include <iostream>
+using namespace std;
+map<string, set<int> >  title, author, keyWords, publisher, publishedYear;
+void query(string &type, map<string, set<int> > &a) {//a是map类型，a[string]是set类型
+	if (a.find(type) == a.end()) {
+		printf("Not Found\n");
+	}
+	else {
+		for (set<int>::iterator it = a[type].begin(); it != a[type].end(); it++) {
+			printf("%07d\n", *it);//it是地址，前面要加星号
+		}
+	}
+}
+int main() {
+	int num;
+	scanf("%d", &num);
+	for (int i = 0; i < num; i++) {
+		int id;
+		string str;
+		scanf("%d", &id);
+		char c = getchar();
+		getline(cin, str);
+		title[str].insert(id);
+		getline(cin, str);
+		author[str].insert(id);
+		while (cin >> str) {
+			keyWords[str].insert(id);
+			c = getchar();
+			if (c == '\n') break;
+		}
+		getline(cin, str);
+		publisher[str].insert(id);
+		getline(cin, str);
+		publishedYear[str].insert(id);
+	}
+	scanf("%d", &num);
+	for (int i = 0; i < num; i++) {
+		int type;
+		string str;
+		scanf("%d: ", &type);
+		getline(cin, str);
+		cout << type << ": " << str << endl;
+		if (type == 1) query(str,title);
+		else if (type == 2) query(str, author);
+		else if (type == 3) query(str, keyWords);
+		else if (type == 4) query(str, publisher);
+		else query(str, publishedYear);
+	}
+	return 0;
+}
