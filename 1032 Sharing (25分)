@@ -1,0 +1,27 @@
+#include <cstdio>
+const int maxn = 100010;
+struct Node {
+	char letter;
+	int next = -1;
+	bool flag = false;//表示是否被另一条链经过
+}node[maxn];
+int main() {
+	int add1, add2, num;
+	scanf("%d%d%d", &add1, &add2, &num);
+	for (int i = 0; i < num; i++) {
+		int add, next;
+		char letter;
+		scanf("%d %c %d", &add, &letter, &next);
+		node[add].letter = letter;
+		node[add].next = next;
+	}
+	int add = -1;//目标地址
+	for (add = add1; add != -1; add=node[add].next) {
+		node[add].flag = true;
+	}
+	for (add = add2; add != -1; add = node[add].next) {
+		if (node[add].flag == true) break;
+	}
+	if (add != -1) printf("%05d\n", add);
+	else printf("-1");
+}
