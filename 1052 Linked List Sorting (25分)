@@ -1,0 +1,53 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+const int maxn = 100010;
+struct Node {
+	int add;
+	int vale;
+	int next ;
+	bool falg ;
+}node[maxn];
+bool cmp(Node a, Node b) {
+	if (a.falg == false || b.falg == false) return a.falg > b.falg;
+	else return a.vale < b.vale;
+}
+int main() {
+	for (int i = 0; i < maxn; i++) {
+		node[i].falg = false;
+	}
+	int num, head;
+	scanf("%d %d", &num, &head);
+	for (int i = 0; i < num; i++) {
+		int add, vale, next;
+		scanf("%d%d%d", &add, &vale, &next);
+		node[add].add = add;
+		node[add].vale = vale;
+		node[add].next = next;
+	}
+	int p = head;
+	int count = 0;
+	while (p != -1) {
+		node[p].falg = true;
+		p = node[p].next;
+		count++;
+	}
+	if (count == 0) {
+		printf("0 -1");
+	}
+	else {
+		sort(node, node + maxn, cmp);
+		printf("%d %05d\n", count, node[0].add);
+		for (int i = 0; i < count; i++) {
+			if (i != count - 1) {
+				printf("%05d %d %05d\n", node[i].add, node[i].vale, node[i+1].add);//什么时候该%05d想清楚
+			}
+			else {
+				printf("%05d %d -1\n", node[i].add, node[i].vale);
+			}
+
+		}
+	}
+
+	return 0;
+}
