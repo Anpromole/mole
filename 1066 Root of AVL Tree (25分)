@@ -1,0 +1,81 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+struct node {
+	int data, height;
+	node* lchild, * rchild;
+}*root;
+node* newNode(int x) {
+	node* newnode = new node;
+	newnode->data = x;
+	newnode->height = 1;
+	newnode->lchild = newnode->rchild = NULL;
+	return newnode;
+}
+int getHeight(node* root) {
+	if (root == NULL) return 0;
+	else return root->height;
+}
+int getBalanceFactor(node* root) {
+	return getHeight(root->lchild) - getHeight(root->rchild);
+}
+void updateHeight(node* root) {
+	root->height = max(getHeight(root->lchild), getHeight(root->rchild)) + 1;
+}
+void L(node* &root) {
+	node* temp = root->rchild;
+	root->rchild = temp->lchild;
+	temp->lchild = root;
+	updateHeight(root);//更新是有顺序的，一定要先root后temp，因为此时root在temp下面
+	updateHeight(temp);
+	root = temp;
+}
+void R(node* &root) {
+	node* temp = root->lchild;
+	root->lchild = temp->rchild;
+	temp->rchild = root;
+	updateHeight(root);
+	updateHeight(temp);
+	root = temp;
+}
+void insert(node* &root ,int x) {
+	if (root == NULL) {
+		root = newNode(x);
+		return;
+	}
+	if (x < root->data) {
+		insert(root->lchild, x);
+		updateHeight(root);
+		if (getBalanceFactor(root) == 2) {
+			if (getBalanceFactor(root->lchild) == 1) {
+				R(root);
+			}
+			else if (getBalanceFactor(root->lchild) == -1) {
+				L(root->lchild);
+				R(root);
+			}
+		}
+	}
+	else {
+		insert(root->rchild, x);
+		updateHeight(root);
+		if (getBalanceFactor(root) == -2) {
+			if (getBalanceFactor(root->rchild) == 1) {
+				R(root->rchild);
+				L(root);
+			}
+			else if (getBalanceFactor(root->rchild) == -1) {
+				L(root);
+			}
+		}
+	}
+}
+int main() {
+	int num, arry[30], v;
+	scanf("%d", &num);
+	for (int i = 0; i < num; i++) {
+		scanf("%d", &v);
+		insert(root, v);
+	}
+	printf("%d\n", root->data);
+}
